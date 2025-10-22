@@ -30,21 +30,22 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #include <termios.h>
 #include <unistd.h>
 #include <poll.h>
-#include <linux/serial.h>
 
 // cygwin defines FIONREAD in socket.h instead of ioctl.h
 #ifndef FIONREAD
 #include <sys/socket.h>
 #endif
 
-#if PLATFORM_IS_APPLE
+#if PLATFORM_IS_LINUX
+#include <linux/serial.h>
+#endif
 
+#if PLATFORM_IS_APPLE
 #include <CoreFoundation/CoreFoundation.h>
 #include <IOKit/IOKitLib.h>
 #include <IOKit/serial/IOSerialKeys.h>
 #include <IOKit/serial/ioss.h>
 #include <IOKit/IOBSD.h>
-
 #endif
 
 #ifndef B460800
@@ -389,7 +390,7 @@ static int serialPortOpenPlatform(port_handle_t port, const char* portName, int 
 
 #else
 
-    int fd = open(portName, O_RDWR | O_NOCTTY);     // enable read/write and disable flow control
+    int fd = open(portName, O_RDWR | O_NOCTTY | O_NONBLOCK);     // enable read/write and disable flow control
     if (fd < 0)
     {
         error_message("[%s]serialPortOpenPlatform():: Error opening port: %s (%d)\n", portName, strerror(errno), errno);
