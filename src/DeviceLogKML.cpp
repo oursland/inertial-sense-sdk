@@ -175,8 +175,6 @@ bool cDeviceLogKML::CloseWriteFile(int kid, sKmlLog &log)
     // Show sample (dot)
     if (m_showPoints)
     {
-        int tracksNum = 0;
-
         double nextTime = log.data[0].time;
         for (size_t i = 0; i < log.data.size();)
         {
@@ -308,7 +306,6 @@ bool cDeviceLogKML::CloseWriteFile(int kid, sKmlLog &log)
 
                 i++;
             }
-            tracksNum++;
         }
     }// if (m_showSample)
 
@@ -364,7 +361,6 @@ bool cDeviceLogKML::CloseWriteFile(int kid, sKmlLog &log)
             Placemark->LinkEndChild(LineString);
 
             ostringstream coordinateStream;
-            int j = 0;
             while (i < log.data.size())
             {
                 if (deadReckoning != log.data[i].deadReckoning)
@@ -376,11 +372,6 @@ bool cDeviceLogKML::CloseWriteFile(int kid, sKmlLog &log)
                 double lat = _CLAMP(item.lla[0], -INS_MAX_LATITUDE_DEG,   INS_MAX_LATITUDE_DEG);
                 double lon = _CLAMP(item.lla[1], -INS_MAX_LONGITUDE_DEG, INS_MAX_LONGITUDE_DEG);
                 double alt = _CLAMP(item.lla[2], -1000, 100000);
-
-                if (i >= log.data.size() - 2)
-                {
-                    j++;
-                }
 
                 snprintf(buf, BUF_SIZE, "%.8lf,%.8lf,%.3lf ", lon, lat, alt);
                 //             if (strcmp("-111.65863637,40.05570543,1418.282 ", buf) == 0)
