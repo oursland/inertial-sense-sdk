@@ -15,7 +15,7 @@
  */
 bool DeviceManager::registerDevice(device_handle_t device) {
     if (!device)
-        return NULL;
+        return false;
 
     // first, ensure there isn't a matching device already
     for (auto d : *this) {
